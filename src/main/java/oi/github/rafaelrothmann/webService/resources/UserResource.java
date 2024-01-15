@@ -1,0 +1,23 @@
+package oi.github.rafaelrothmann.webService.resources;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import oi.github.rafaelrothmann.webService.entities.User;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+@RestController
+@RequestMapping(value = "/users")
+public class UserResource {
+    
+    @GetMapping
+    public ResponseEntity<User> findAll() {
+        User u = new User(1L, "Maria", "maria@gmail.com", "555-555", "123");
+        
+        return ResponseEntity.ok().body(u); 
+    }
+
+}
