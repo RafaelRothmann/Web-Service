@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import oi.github.rafaelrothmann.webService.entities.User;
 import oi.github.rafaelrothmann.webService.repositories.UserRepository;
 import oi.github.rafaelrothmann.webService.services.exceptions.DatabaseException;
@@ -35,7 +36,7 @@ public class UserService {
     public void delete(Long id){
         try{
             repository.deleteById(id);
-            
+
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
 
@@ -46,9 +47,15 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+
+        }
     }
 
     private void updateData(User entity, User obj) {
